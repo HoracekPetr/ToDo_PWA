@@ -2,6 +2,7 @@ package com.example.plugins
 
 import com.example.data.services.user.UserService
 import com.example.routes.createUser
+import com.example.routes.loginUser
 import io.ktor.routing.*
 import io.ktor.http.*
 import io.ktor.http.content.*
@@ -18,6 +19,7 @@ fun Application.configureRouting() {
 
         //AUTH ROUTES
         createUser(userService)
+        loginUser(userService)
 
         static("/static") {
             resources("static")
