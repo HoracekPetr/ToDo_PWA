@@ -1,7 +1,7 @@
-package com.example.util.validation
+package com.example.data.util.validation.user
 
 sealed class LoginUserValidation{
     object InvalidCredentialsError: LoginUserValidation()
     object EmptyFieldError: LoginUserValidation()
-    object Success: LoginUserValidation()
+    data class Success(val userId: String?): LoginUserValidation()
 }

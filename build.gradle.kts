@@ -38,4 +38,6 @@ dependencies {
     implementation("io.insert-koin:koin-ktor:$koin_version")
     // SLF4J Logger
     implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
+    implementation(group = "org.mindrot", name = "jbcrypt", version = "0.4")
+
 }

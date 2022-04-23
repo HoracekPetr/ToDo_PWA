@@ -6,8 +6,9 @@ import org.bson.types.ObjectId
 data class Task(
     @BsonId
     val id: String = ObjectId().toString(),
+    val ownerId: String,
     val title: String,
-    val description: String,
-    val members: List<String>,
-    val completed: Boolean
+    val description: String?,
+    val urgency: Int,
+    val completed: Boolean = false
 )

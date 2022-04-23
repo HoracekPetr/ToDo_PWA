@@ -1,7 +1,7 @@
-package com.example.util.validation
+package com.example.data.util.validation.user
 
 sealed class CreateUserValidation{
     object UserExistsError: CreateUserValidation()
     object EmptyFieldError: CreateUserValidation()
-    object Success: CreateUserValidation()
+    data class Success(val request: Boolean): CreateUserValidation()
 }
