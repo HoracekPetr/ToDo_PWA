@@ -8,7 +8,7 @@ import java.util.function.Predicate.not
 
 class TaskRepositoryImpl(
     db: CoroutineDatabase
-): TaskRepository {
+) : TaskRepository {
 
     private val tasks = db.getCollection<Task>()
 
@@ -50,6 +50,15 @@ class TaskRepositoryImpl(
     override suspend fun changeTaskCompleteStatus(taskId: String): Boolean {
         val taskCompleteStatus = getTaskById(taskId)?.completed ?: return false
         return tasks.updateOneById(taskId, update = setValue(Task::completed, !taskCompleteStatus)).wasAcknowledged()
+    }
+
+    override suspend fun searchTasks(searchQuery: String, page: Int, pageSize: Int, userId: String): List<Task> {
+        return tasks
+            .find(and(Task::ownerId eq userId, Task::title regex Regex("(?i).*${searchQuery}.*")))
+            .skip(page * pageSize)
+            .limit(page)
+            .descendingSort(Task::urgency)
+            .toList()
     }
 
     override suspend fun updateTask(taskId: String, updateTaskRequest: UpdateTaskRequest): Boolean {

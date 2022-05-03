@@ -71,4 +71,6 @@ class TaskService(
 
     suspend fun deleteTask(taskId: String) = taskRepository.deleteTask(taskId)
 
+    suspend fun searchTasks(searchQuery: String, page: Int, pageSize: Int, userId: String) = taskRepository.searchTasks(searchQuery, page, pageSize, userId)
+
 }

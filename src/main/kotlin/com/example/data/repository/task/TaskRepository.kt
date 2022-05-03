@@ -21,4 +21,6 @@ interface TaskRepository {
 
     suspend fun deleteTask(taskId: String): Boolean
 
+    suspend fun searchTasks(searchQuery: String, page: Int, pageSize: Int, userId: String): List<Task>
+
 }

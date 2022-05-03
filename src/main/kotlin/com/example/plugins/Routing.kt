@@ -20,6 +20,7 @@ fun Application.configureRouting() {
     routing {
 
         //AUTH ROUTES
+        authenticate()
         createUser(userService = userService)
         loginUser(
             userService = userService,
@@ -34,6 +35,7 @@ fun Application.configureRouting() {
         getAllTasks(taskService)
         getCompletedTasks(taskService)
         getUncompletedTasks(taskService)
+        searchTasks(taskService)
         changeTaskCompleteStatus(taskService)
         updateTask(taskService)
         deleteTask(taskService)

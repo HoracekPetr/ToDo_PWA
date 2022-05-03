@@ -8,4 +8,6 @@ object TaskConstants {
     const val PAGE_SIZE = "pageSize"
 
     const val TASK_ID = "taskId"
+
+    const val SEARCH_QUERY = "query"
 }

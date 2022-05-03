@@ -1,5 +1,6 @@
 package com.example.routes
 
+import com.example.data.models.Task
 import com.example.data.requests.task.CreateTaskRequest
 import com.example.data.requests.task.UpdateTaskRequest
 import com.example.data.responses.BasicApiResponse
@@ -9,6 +10,7 @@ import com.example.data.util.task.TaskConstants.DEFAULT_PAGE
 import com.example.data.util.task.TaskConstants.DEFAULT_PAGE_SIZE
 import com.example.data.util.task.TaskConstants.PAGE
 import com.example.data.util.task.TaskConstants.PAGE_SIZE
+import com.example.data.util.task.TaskConstants.SEARCH_QUERY
 import com.example.data.util.task.TaskConstants.TASK_ID
 import com.example.data.util.validation.task.StandardTaskValidation
 import com.example.plugins.userId
@@ -21,9 +23,9 @@ import io.ktor.routing.*
 
 fun Route.createTask(
     taskService: TaskService
-){
+) {
     authenticate {
-        post(path = "/todo/task/create"){
+        post(path = "/todo/task/create") {
             val createTaskRequest = call.receiveOrNull<CreateTaskRequest>() ?: kotlin.run {
                 call.respond(
                     HttpStatusCode.BadRequest,
@@ -34,7 +36,7 @@ fun Route.createTask(
 
             val userId = call.userId
 
-            when(taskService.createTask(createTaskRequest = createTaskRequest, ownerId = userId)){
+            when (taskService.createTask(createTaskRequest = createTaskRequest, ownerId = userId)) {
 
                 is StandardTaskValidation.EmptyTitleError -> {
                     call.respond(
@@ -71,16 +73,16 @@ fun Route.createTask(
 
 fun Route.getTaskById(
     taskService: TaskService
-){
+) {
     authenticate {
-        get(path = "/todo/task"){
+        get(path = "/todo/task") {
             val taskId = call.parameters[TASK_ID] ?: ""
 
             val userId = call.userId
 
             val task = taskService.getTaskById(taskId)
 
-            if(task == null){
+            if (task == null) {
                 call.respond(
                     HttpStatusCode.NotFound,
                     BasicApiResponse<Unit>(
@@ -91,7 +93,7 @@ fun Route.getTaskById(
                 return@get
             }
 
-            if(task.ownerId != userId){
+            if (task.ownerId != userId) {
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     BasicApiResponse<Unit>(
@@ -115,7 +117,7 @@ fun Route.getTaskById(
 
 fun Route.getAllTasks(
     taskService: TaskService
-){
+) {
     authenticate {
         get(path = "/todo/task/all") {
             val page = call.parameters[PAGE]?.toIntOrNull() ?: DEFAULT_PAGE
@@ -124,7 +126,7 @@ fun Route.getAllTasks(
 
             val allTasks = taskService.getAllTasks(userId = userId, page = page, pageSize = pageSize)
 
-            if(allTasks.isEmpty()){
+            if (allTasks.isEmpty()) {
                 call.respond(
                     HttpStatusCode.NotFound,
                     BasicApiResponse<Unit>(successful = false, message = ResponseMessages.NO_TASKS.message)
@@ -144,7 +146,7 @@ fun Route.getAllTasks(
 
 fun Route.getCompletedTasks(
     taskService: TaskService
-){
+) {
     authenticate {
         get(path = "/todo/task/all/completed") {
             val page = call.parameters[PAGE]?.toIntOrNull() ?: DEFAULT_PAGE
@@ -153,7 +155,7 @@ fun Route.getCompletedTasks(
 
             val completeTasks = taskService.getCompletedTasks(userId = userId, page = page, pageSize = pageSize)
 
-            if(completeTasks.isEmpty()){
+            if (completeTasks.isEmpty()) {
                 call.respond(
                     HttpStatusCode.NotFound,
                     BasicApiResponse<Unit>(successful = false, message = ResponseMessages.NO_COMPLETED_TASKS.message)
@@ -173,7 +175,7 @@ fun Route.getCompletedTasks(
 
 fun Route.getUncompletedTasks(
     taskService: TaskService
-){
+) {
     authenticate {
         get(path = "/todo/task/all/uncompleted") {
             val page = call.parameters[PAGE]?.toIntOrNull() ?: DEFAULT_PAGE
@@ -182,7 +184,7 @@ fun Route.getUncompletedTasks(
 
             val incompleteTasks = taskService.getUncompletedTasks(userId = userId, page = page, pageSize = pageSize)
 
-            if(incompleteTasks.isEmpty()){
+            if (incompleteTasks.isEmpty()) {
                 call.respond(
                     HttpStatusCode.NotFound,
                     BasicApiResponse<Unit>(successful = false, message = ResponseMessages.NO_UNCOMPLETED_TASKS.message)
@@ -202,9 +204,9 @@ fun Route.getUncompletedTasks(
 
 fun Route.changeTaskCompleteStatus(
     taskService: TaskService
-){
+) {
     authenticate {
-        put(path = "/todo/task/complete"){
+        put(path = "/todo/task/complete") {
 
             val taskId = call.parameters[TASK_ID] ?: ""
 
@@ -212,7 +214,7 @@ fun Route.changeTaskCompleteStatus(
 
             val task = taskService.getTaskById(taskId)
 
-            if(task == null){
+            if (task == null) {
                 call.respond(
                     HttpStatusCode.NotFound,
                     BasicApiResponse<Unit>(
@@ -223,7 +225,7 @@ fun Route.changeTaskCompleteStatus(
                 return@put
             }
 
-            if(task.ownerId != userId){
+            if (task.ownerId != userId) {
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     BasicApiResponse<Unit>(
@@ -236,7 +238,7 @@ fun Route.changeTaskCompleteStatus(
 
             val changeTaskCompleteStatus = taskService.changeTaskCompleteStatus(taskId)
 
-            if(!changeTaskCompleteStatus){
+            if (!changeTaskCompleteStatus) {
                 call.respond(
                     HttpStatusCode.BadRequest,
                     BasicApiResponse<Unit>(
@@ -260,7 +262,7 @@ fun Route.updateTask(
     taskService: TaskService
 ) {
     authenticate {
-        put(path = "/todo/task/update"){
+        put(path = "/todo/task/update") {
 
             val taskId = call.parameters[TASK_ID] ?: ""
             val updateTaskRequest = call.receiveOrNull<UpdateTaskRequest>() ?: kotlin.run {
@@ -273,7 +275,7 @@ fun Route.updateTask(
             val userId = call.userId
             val task = taskService.getTaskById(taskId)
 
-            if(task == null){
+            if (task == null) {
                 call.respond(
                     HttpStatusCode.NotFound,
                     BasicApiResponse<Unit>(
@@ -284,7 +286,7 @@ fun Route.updateTask(
                 return@put
             }
 
-            if(task.ownerId != userId){
+            if (task.ownerId != userId) {
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     BasicApiResponse<Unit>(
@@ -295,7 +297,7 @@ fun Route.updateTask(
                 return@put
             }
 
-            when(taskService.updateTask(taskId = taskId, updateTaskRequest = updateTaskRequest)){
+            when (taskService.updateTask(taskId = taskId, updateTaskRequest = updateTaskRequest)) {
                 is StandardTaskValidation.EmptyTitleError -> {
                     call.respond(
                         HttpStatusCode.Forbidden,
@@ -339,14 +341,14 @@ fun Route.updateTask(
 
 fun Route.deleteTask(
     taskService: TaskService
-){
+) {
     authenticate {
-        delete(path = "/todo/task/delete"){
+        delete(path = "/todo/task/delete") {
             val taskId = call.parameters[TASK_ID] ?: ""
             val userId = call.userId
             val task = taskService.getTaskById(taskId)
 
-            if(task == null){
+            if (task == null) {
                 call.respond(
                     HttpStatusCode.NotFound,
                     BasicApiResponse<Unit>(
@@ -357,7 +359,7 @@ fun Route.deleteTask(
                 return@delete
             }
 
-            if(task.ownerId != userId){
+            if (task.ownerId != userId) {
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     BasicApiResponse<Unit>(
@@ -370,7 +372,7 @@ fun Route.deleteTask(
 
             val deleteTask = taskService.deleteTask(taskId)
 
-            if(!deleteTask){
+            if (!deleteTask) {
                 call.respond(
                     HttpStatusCode.BadRequest,
                     BasicApiResponse<Unit>(
@@ -384,6 +386,44 @@ fun Route.deleteTask(
                 HttpStatusCode.OK,
                 BasicApiResponse<Unit>(
                     successful = true
+                )
+            )
+        }
+    }
+}
+
+fun Route.searchTasks(
+    taskService: TaskService
+) {
+    authenticate {
+        get(path = "/todo/task/search") {
+            val searchQuery = call.parameters[SEARCH_QUERY]
+            val page = call.parameters[PAGE]?.toIntOrNull() ?: DEFAULT_PAGE
+            val pageSize = call.parameters[PAGE_SIZE]?.toIntOrNull() ?: DEFAULT_PAGE_SIZE
+
+            val userId = call.userId
+
+            if (searchQuery == null || searchQuery.isBlank()) {
+
+                val allTasks = taskService.getAllTasks(userId, page, pageSize)
+
+                call.respond(
+                    HttpStatusCode.OK,
+                    BasicApiResponse(
+                        successful = true,
+                        data = allTasks
+                    )
+                )
+                return@get
+            }
+
+            val tasksByQuery = taskService.searchTasks(searchQuery, page, pageSize, userId)
+
+            call.respond(
+                HttpStatusCode.OK,
+                BasicApiResponse(
+                    successful = true,
+                    data = tasksByQuery
                 )
             )
         }

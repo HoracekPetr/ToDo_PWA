@@ -10,10 +10,12 @@ import com.example.data.util.validation.user.CreateUserValidation
 import com.example.data.responses.ResponseMessages
 import com.example.data.util.validation.user.LoginUserValidation
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import org.koin.ktor.ext.get
 import java.util.*
 
 fun Route.createUser(
@@ -97,6 +99,16 @@ fun Route.loginUser(
                     )
                 )
             }
+        }
+    }
+}
+
+fun Route.authenticate(){
+    authenticate{
+        get(path = "/authenticate"){
+            call.respond(
+                HttpStatusCode.OK
+            )
         }
     }
 }
