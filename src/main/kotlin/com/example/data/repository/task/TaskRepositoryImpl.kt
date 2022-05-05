@@ -23,7 +23,7 @@ class TaskRepositoryImpl(
         return tasks
             .find(Task::ownerId eq userId)
             .skip(page * pageSize)
-            .limit(page)
+            .limit(pageSize)
             .descendingSort(Task::urgency)
             .toList()
     }
@@ -32,7 +32,7 @@ class TaskRepositoryImpl(
         return tasks
             .find(and(Task::ownerId eq userId, Task::completed eq true))
             .skip(page * pageSize)
-            .limit(page)
+            .limit(pageSize)
             .descendingSort(Task::urgency)
             .toList()
     }
@@ -41,7 +41,7 @@ class TaskRepositoryImpl(
         return tasks
             .find(and(Task::ownerId eq userId, Task::completed eq false))
             .skip(page * pageSize)
-            .limit(page)
+            .limit(pageSize)
             .descendingSort(Task::urgency)
             .toList()
     }
