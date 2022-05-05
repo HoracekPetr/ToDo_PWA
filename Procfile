@@ -1,0 +1,1 @@
+web: ./build/install/com.example.ktor-todoapp-pwa/bin/com.example.ktor-todoapp-pwa

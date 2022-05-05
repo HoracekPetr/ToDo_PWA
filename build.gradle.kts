@@ -41,3 +41,7 @@ dependencies {
     implementation(group = "org.mindrot", name = "jbcrypt", version = "0.4")
 
 }
+
+tasks.create("stage") {
+    dependsOn("installDist")
+}
