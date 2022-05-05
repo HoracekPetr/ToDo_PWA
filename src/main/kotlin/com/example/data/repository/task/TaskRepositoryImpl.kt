@@ -4,7 +4,6 @@ import com.example.data.models.Task
 import com.example.data.requests.task.UpdateTaskRequest
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import java.util.function.Predicate.not
 
 class TaskRepositoryImpl(
     db: CoroutineDatabase
